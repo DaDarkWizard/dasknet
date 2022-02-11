@@ -1,0 +1,6 @@
+*.o
+**/*.o
+dasknet-img
+floppy.img
+*.bin
+**/*.bin
