@@ -1,0 +1,111 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label":"Compile Assembly",
+        "type":"shell",
+        "command":"nasm boot_sect.asm -f bin -o boot_sect.bin",
+        "group": "test",
+        "presentation": {
+            "reveal": "always",
+            "panel": "shared"
+        },
+        "options":{
+          "cwd":"boot"
+        }
+      },
+      {
+        "label":"Run Assembly",
+        "type":"shell",
+        "command":"qemu-system-x86_64 boot_sect.bin",
+        "group": "test",
+        "presentation": {
+            "reveal": "always",
+            "panel": "shared"
+        },
+        "options":{
+          "cwd":"boot"
+        }
+      },
+      {
+        "label":"Create Floppy",
+        "type":"shell",
+        "command":"dd if=/dev/zero of=floppy.img bs=512 count=2880",
+        "group": "test",
+        "presentation": {
+            "reveal": "always",
+            "panel": "new"
+        },
+        "options":{
+          "cwd":"boot"
+        }
+      },
+      {
+        "label":"Write Floppy",
+        "type":"shell",
+        "command":"dd if=boot_sect.bin of=floppy.img conv=notrunc",
+        "group": "test",
+        "presentation": {
+            "reveal": "always",
+            "panel": "new"
+        },
+        "options":{
+          "cwd":"boot"
+        }
+      },
+      {
+        "label":"Run Floppy",
+        "type":"shell",
+        "command":"qemu-system-x86_64 floppy.img",
+        "group": "test",
+        "presentation": {
+            "reveal": "always",
+            "panel": "new"
+        },
+        "options":{
+          "cwd":"boot"
+        }
+      },
+      {
+        "label":"Display Binary",
+        "type":"shell",
+        "command":"od -t x1 -A n boot_sect.bin",
+        "group": "test",
+        "presentation": {
+            "reveal": "always",
+            "panel": "new"
+        },
+        "options":{
+          "cwd":"boot"
+        }
+      },
+      {
+        "label":"Compile Kernel",
+        "type":"shell",
+        "command":"gcc -ffreestanding -c kernel.c -o kernel.o && ld -o kernel.bin -Ttext 0x1000 kernel.o --oformat binary",
+        "group": "test",
+        "presentation": {
+            "reveal": "always",
+            "panel": "new"
+        },
+        "options":{
+          "cwd":"kernel"
+        }
+      },
+      {
+        "label":"Run Bochs",
+        "type":"shell",
+        "command":"bochs",
+        "group": "test",
+        "presentation": {
+            "reveal": "always",
+            "panel": "new"
+        },
+        "options":{
+          "cwd":"kernel"
+        }
+      }
+    ]
+  }
