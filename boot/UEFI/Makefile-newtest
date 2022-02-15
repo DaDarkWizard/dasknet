@@ -1,0 +1,64 @@
+
+BOOTX64.EFI: hello.efi
+	cp hello.efi BOOTX64.EFI
+	dd if=/dev/zero of=fat.img bs=1k count=1440
+	mformat -i fat.img -f 1440 ::
+	mmd -i fat.img ::/EFI
+	mmd -i fat.img ::/EFI/BOOT
+	mcopy -i fat.img BOOTX64.EFI ::/EFI/BOOT
+
+hello.o: hello.c
+	gcc hello.c                            \
+	-c                                 \
+	-fno-stack-protector               \
+	-fpic                              \
+	-fshort-wchar                      \
+	-mno-red-zone                      \
+	-I/usr/include/efi \
+	-I/usr/include/efi/x86_64	\
+	-I/usr/include/efi/protocol	\
+	-DEFI_FUNCTION_WRAPPER             \
+	-o hello.o
+ 
+data.o: data.c
+	gcc data.c                            \
+	-c                                 \
+	-fno-stack-protector               \
+	-fpic                              \
+	-fshort-wchar                      \
+	-mno-red-zone                      \
+	-I/usr/include/efi \
+	-I/usr/include/efi/x86_64	\
+	-I/usr/include/efi/protocol	\
+	-DEFI_FUNCTION_WRAPPER             \
+	-o data.o
+
+hello.so: hello.o data.o
+	ld hello.o data.o                        \
+     /usr/lib/crt0-efi-x86_64.o     \
+     -nostdlib                      \
+     -znocombreloc                  \
+     -T /usr/lib/elf_x86_64_efi.lds \
+     -shared                        \
+     -Bsymbolic                     \
+     -L /usr/include/efi               \
+	 -L /usr/lib/				\
+     -l:libgnuefi.a                 \
+     -l:libefi.a                    \
+     -o hello.so
+
+hello.efi: hello.so 
+	objcopy -j .text                \
+          -j .sdata               \
+          -j .data                \
+          -j .dynamic             \
+          -j .dynsym              \
+          -j .rel                 \
+          -j .rela                \
+          -j .reloc               \
+          --target=efi-app-x86_64 \
+          hello.so                 \
+          hello.efi
+
+clean:
+	rm -f data.o hello.o hello.so fat.img hello.efi BOOTX64.EFI
