@@ -12,7 +12,7 @@ struct gdt_table gdt_table = {
     {0xffff, 0, 0, 0x9a, 0xa0, 0},  /* 0x28 user code */
     {0, 0, 0, 0x92, 0xa0, 0},  /* 0x30 ovmf data */
     {0, 0, 0, 0x9a, 0xa0, 0},  /* 0x38 ovmf code */
-    {0, 0, 0, 0x89, 0xa0, 0},  /* 0x40 tss low */
+    {0xffff, 0x0, 0x0, 0x89, 0xaf, 0},  /* 0x40 tss low */
     {0, 0, 0, 0x00, 0x00, 0},  /* 0x48 tss high */
 };
 
@@ -23,15 +23,15 @@ void * memzero(void * s, uint64_t n) {
 }
 
 void setup_gdt() {
-    /*memzero((void*)&tss, sizeof(tss));
+    memzero((void*)&tss, sizeof(tss));
     uint64_t tss_base = ((uint64_t)&tss);
     gdt_table.tss_low.base15_0 = tss_base & 0xffff;
     gdt_table.tss_low.base23_16 = (tss_base >> 16) & 0xff;
     gdt_table.tss_low.base31_24 = (tss_base >> 24) & 0xff;
     gdt_table.tss_low.limit15_0 = sizeof(tss);
     gdt_table.tss_high.limit15_0 = (tss_base >> 32) & 0xffff;
-    gdt_table.tss_high.base15_0 = (tss_base >> 48) & 0xffff;*/
+    gdt_table.tss_high.base15_0 = (tss_base >> 48) & 0xffff;
 
-    //struct table_ptr gdt_ptr = { sizeof(gdt_table)-1, (UINT64)&gdt_table };
-    load_gdt();
+    struct table_ptr gdt_ptr = { sizeof(gdt_table)-1, (UINT64)&gdt_table };
+    load_gdt(&gdt_ptr);
 }

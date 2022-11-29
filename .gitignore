@@ -4,3 +4,4 @@ dasknet-img
 floppy.img
 *.bin
 **/*.bin
+gcc/

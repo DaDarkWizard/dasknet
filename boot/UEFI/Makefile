@@ -1,6 +1,6 @@
 
 HEADERS = lib.h efimacros.h memory/allocator.h
-OBJ = hello.o efimacros.o data.o allocator.o gdtc.o gdt_asm.o paging.o syscall.o interrupts.o gdt.o
+OBJ = hello.o efimacros.o data.o allocator.o gdtc.o gdt_asm.o paging.o syscall.o interrupts.o
 OPTIONS = -ffreestanding -I/usr/include/efi -I/usr/include/efi/x86_64 -I/usr/include/efi/protocol -ggdb
 
 BOOTX64.EFI: ${OBJ}
@@ -28,9 +28,6 @@ gdtc.o: memory/gdtc.c ${HEADERS}
 
 gdt_asm.o: memory/gdt_asm.c
 	x86_64-w64-mingw32-gcc -masm=intel ${OPTIONS} -c -o gdt_asm.o memory/gdt_asm.c
-
-gdt.o: memory/gdt.asm
-	nasm memory/gdt.asm -f elf64 -o gdt.o
 
 paging.o: memory/paging.c ${HEADERS}
 	x86_64-w64-mingw32-gcc ${OPTIONS} -c -o paging.o memory/paging.c

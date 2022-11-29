@@ -37,11 +37,11 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
     setup_interrupts();
     setup_gdt();
 
-    while(1);
+    /*while(1);
 
     Status = ST->ConOut->OutputString(ST->ConOut, L"Welcome to Dasknet!\r\n");
     if (EFI_ERROR(Status))
-        return Status;
+        return Status;*/
 
     //while (1);
 
@@ -51,13 +51,13 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
     //if (EFI_ERROR(Status))
         //return Status;
 
-    //setup_paging();
+    setup_paging();
 
-    //enable_sce();
+    enable_sce();
 
-    /*asm("mySpot:\n"
+    asm("mySpot:\n"
         "hlt\n"
-        "jmp mySpot");*/
+        "jmp mySpot");
 
     /* Now wait for a keystroke before continuing, otherwise your
        message will flash off the screen before you see it.

@@ -1,10 +1,10 @@
 #ifndef GDT_ASM_H
 #define GDT_ASM_H
 
-/*
+
 asm(".global load_gdt\n"
 "load_gdt:\n"
-    "mov ax, ax\n"
+    //"mov ax, ax\n"
     "lgdt [rcx]\n"//      ; load GDT, rdi (1st argument) contains the gdt_ptr\n"
     "mov ax, 0x40\n"//    ; TSS segment is 0x40\n"
     "ltr ax\n"//          ; load TSS\n"
@@ -23,7 +23,7 @@ asm(".global load_gdt\n"
     //"jmp stop\n"
     "lretq\n"//           ; do a far return, like a normal return but\n"
                     //"; pop an extra argument of the stack\n"
-                   ); //"; and load it into CS");*/
+                   ); //"; and load it into CS");
 
 asm(".global load_pml4\n"
 "load_pml4:\n"
