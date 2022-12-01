@@ -7,7 +7,7 @@ mov sp, bp
 
 call ReadDisk ; Load the rest of the OS from the disk
 
-jmp PROGRAM_SPACE ; Jump to the main part of the bootloader
+jmp PROGRAM_SPACE ; Jump to the main part of the bootloader. Extended Program.asm
 
 %include "print.asm"
 %include "DiskRead.asm"
