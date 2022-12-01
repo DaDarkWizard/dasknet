@@ -41,7 +41,13 @@ Heap.o: Sector2+/Heap.cpp Sector2+/Heap.h
 Memory.o: Sector2+/Memory.cpp Sector2+/Memory.h
 	cd Sector2+ && $(CC) $(ARGS) -c "Memory.cpp" -o ../Memory.o
 
-Kernel.bin: ExtendedProgram.o Kernel.o binaries.o TextModeScreen.o IO.o IDT.o Keyboard.o MemoryMap.o Heap.o Memory.o
+PCI.o: Sector2+/PCI.cpp Sector2+/PCI.h
+	cd Sector2+ && $(CC) $(ARGS) -c "PCI.cpp" -o ../PCI.o
+
+Ethernet.o: Sector2+/Ethernet.cpp Sector2+/Ethernet.h
+	cd Sector2+ && $(CC) $(ARGS) -c "Ethernet.cpp" -o ../Ethernet.o
+
+Kernel.bin: ExtendedProgram.o Kernel.o binaries.o TextModeScreen.o IO.o IDT.o Keyboard.o MemoryMap.o Heap.o Memory.o PCI.o Ethernet.o
 	../gcc/bin/x86_64-elf-ld -T"link.ld"
 
 .PHONY: run clean

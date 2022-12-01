@@ -9,7 +9,7 @@ void PrintMemoryMap(MemoryMapEntry *memory_map, uint16_t position)
 {
     set_cursor_position(position);
 
-    print_string("Memory Base: "); print_string(IntegerToString(memory_map->BaseAddress));
+    print_string("Memory Base: 0x"); print_string(HexToString(memory_map->BaseAddress));
     set_cursor_position(position + 80);
     print_string("Region Length: "); print_string(IntegerToString(memory_map->RegionLength));
     set_cursor_position(position + 160);

@@ -1,11 +1,27 @@
 #include "Heap.h"
 
-
+MemorySegmentHeader* FirstMemorySegment;
 MemorySegmentHeader* FirstFreeMemorySegment;
+
+bool SetupHeap()
+{
+    MemoryMapEntry **usable_maps = GetUsableMemoryRegions();
+
+    if(UsableMemoryRegionCount < 2) return false;
+
+    InitializeHeap(usable_maps[1]->BaseAddress, usable_maps[1]->RegionLength);
+    for(uint8_t i = 2; i < UsableMemoryRegionCount; i++)
+    {
+        AppendToHeap(usable_maps[i]->BaseAddress, usable_maps[i]->RegionLength);
+    }
+    return true;
+}
 
 void InitializeHeap(uint64_t heapAddress, uint64_t heapLength)
 {
     FirstFreeMemorySegment = (MemorySegmentHeader*)heapAddress;
+    FirstMemorySegment = FirstFreeMemorySegment;
+
     FirstFreeMemorySegment->MemoryLength = heapLength - sizeof(MemorySegmentHeader);
 
     FirstFreeMemorySegment->NextSegment = 0;
@@ -13,6 +29,26 @@ void InitializeHeap(uint64_t heapAddress, uint64_t heapLength)
     FirstFreeMemorySegment->NextFreeSegment = 0;
     FirstFreeMemorySegment->PreviousFreeSegment = 0;
     FirstFreeMemorySegment->Free = true;
+}
+
+void AppendToHeap(uint64_t heapAddress, uint64_t heapLength)
+{
+    MemorySegmentHeader *newSegment = (MemorySegmentHeader*)heapAddress;
+    newSegment->NextSegment = 0;
+    newSegment->Free = true;
+    newSegment->NextFreeSegment = 0;
+    MemorySegmentHeader *tmpSegment = FirstMemorySegment;
+    while(tmpSegment->NextSegment != 0) tmpSegment = tmpSegment->NextSegment;
+    tmpSegment->NextSegment = newSegment;
+    if(tmpSegment->Free) { newSegment->PreviousFreeSegment = tmpSegment; }
+    else { newSegment->PreviousFreeSegment = tmpSegment->PreviousFreeSegment; }
+    newSegment->PreviousSegment = tmpSegment;
+    while(tmpSegment != 0 && !tmpSegment->Free)
+    {
+        tmpSegment->NextFreeSegment = newSegment;
+        tmpSegment = tmpSegment->PreviousSegment;
+    }
+    if(tmpSegment != 0) tmpSegment->NextFreeSegment = newSegment;
 }
 
 void *malloc(uint64_t size)
@@ -25,6 +61,8 @@ void *malloc(uint64_t size)
     }
 
     MemorySegmentHeader *currentMemorySegment = FirstFreeMemorySegment;
+
+    if(currentMemorySegment == 0) return 0;
 
     while(true)
     {
@@ -95,6 +133,13 @@ void CombineFreeSegments(MemorySegmentHeader *a, MemorySegmentHeader *b)
     if(a == 0 || b == 0) return;
 
     if(a < b) {
+
+        // Ensure memory segments are directly next to each other.
+        if((uint64_t)a + a->MemoryLength + sizeof(MemorySegmentHeader) != (uint64_t)b)
+        {
+            return;
+        }
+
         a->MemoryLength += b->MemoryLength + sizeof(MemorySegmentHeader);
         a->NextFreeSegment = b->NextFreeSegment;
         a->NextSegment = b->NextSegment;
@@ -168,6 +213,11 @@ void free(void *address)
         tmpMemorySegment = currentMemorySegment->PreviousSegment;
         CombineFreeSegments(currentMemorySegment->PreviousSegment, currentMemorySegment);
         currentMemorySegment = tmpMemorySegment;
+    }
+
+    if(FirstFreeMemorySegment == 0)
+    {
+        FirstFreeMemorySegment = currentMemorySegment;
     }
 }
 

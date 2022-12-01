@@ -32,6 +32,15 @@ isr1:
     iretq
     GLOBAL isr1
 
+[extern iunknown_handler]
+
+iunknown:
+    PUSHALL
+    call iunknown_handler
+    POPALL
+    iretq
+    GLOBAL iunknown
+
 LoadIDT:
     lidt[idtDescriptor]
     sti

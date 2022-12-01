@@ -15,6 +15,8 @@ INPUT
     MemoryMap.o
     Heap.o
     Memory.o
+    PCI.o
+    Ethernet.o
 )
 
 OUTPUT

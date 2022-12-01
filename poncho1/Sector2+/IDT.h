@@ -21,3 +21,4 @@ void InitializeIDT();
 extern void (*MainKeyboardHandler)(uint8_t scan_code, uint8_t character);
 
 extern "C" void isr1_handler();
+extern "C" void iunknown_handler();

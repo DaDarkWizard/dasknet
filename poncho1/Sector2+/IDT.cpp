@@ -17,6 +17,18 @@ void InitializeIDT()
         _idt[1].types_attr = 0x8e;
     //}
 
+    for(uint64_t t = 0; t < 256; t++)
+    {
+        if(t == 1) continue;
+        _idt[t].zero = 0;
+        _idt[t].offset_low = (uint16_t)(((uint64_t)&isr1 & 0x000000000000ffff));
+        _idt[t].offset_mid = (uint16_t)(((uint64_t)&isr1 & 0x00000000ffff0000) >> 16);
+        _idt[t].offset_high = (uint32_t)(((uint64_t)&isr1 & 0xffffffff00000000) >> 32);
+        _idt[t].ist = 0;
+        _idt[t].selector = 0x08;
+        _idt[t].types_attr = 0x8e;
+    }
+
     RemapPic();
 
     outb(0x21, 0xfd);
@@ -40,6 +52,14 @@ extern "C" void isr1_handler()
         MainKeyboardHandler(scan_code, chr);
     }
     
+    outb(0x20, 0x20);
+    outb(0xa0, 0x20);
+}
+
+extern "C" void iunknown_handler()
+{
+    print_string("Unhandled interrupt\n");
+
     outb(0x20, 0x20);
     outb(0xa0, 0x20);
 }

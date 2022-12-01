@@ -1,6 +1,7 @@
 #pragma once
 
 #include "types.h"
+#include "MemoryMap.h"
 #include "Memory.h"
 
 struct MemorySegmentHeader
@@ -18,7 +19,9 @@ struct AlignedMemorySegmentHeader {
     bool IsAligned : 1;
 };
 
+bool SetupHeap();
 void InitializeHeap(uint64_t heapAddress, uint64_t heapLength);
+void AppendToHeap(uint64_t heapAddress, uint64_t heapLength);
 void *malloc(uint64_t size);
 void free(void *memory);
 void *calloc(uint64_t size);
