@@ -3,24 +3,13 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**"
-            ],
-            "defines": [],
-            "compilerPath": "/usr/bin/gcc",
-            "cStandard": "gnu17",
-            "cppStandard": "gnu++14",
-            "intelliSenseMode": "linux-gcc-x64"
-        },
-        {
-            "name": "OSDev",
-            "includePath": [
                 "${workspaceFolder}/**",
-                "/usr/include/efi",
-                "/usr/include/efi/x86_64",
-                "/usr/include/efi/protocol"
+                "/usr/include/gnu-efi-3.0.17/inc",
+                "/usr/include/gnu-efi-3.0.17/inc/x86_64",
+                "/usr/include/gnu-efi-3.0.17/inc/protocol"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/gcc",
+            "compilerPath": "/usr/bin/x86_64-w64-mingw32-gcc",
             "cStandard": "gnu17",
             "cppStandard": "gnu++14",
             "intelliSenseMode": "linux-gcc-x64"

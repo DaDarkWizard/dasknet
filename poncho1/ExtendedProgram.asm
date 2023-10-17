@@ -1,7 +1,7 @@
 [bits 16]
 jmp EnterProtectedMode
 
-%include "../Sector1/print.asm"
+%include "s1_print.asm"
 %include "gdt.asm"
 %include "DetectMemory.asm"
 
