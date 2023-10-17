@@ -11,6 +11,7 @@ UINTN frameBufferLength;
 UINT32 pixelsPerScanLine;
 UINT32 horizontalResolution;
 UINT32 verticalResolution;
+unsigned int* cursor;
 
 void setup_GOP()
 {
@@ -93,16 +94,18 @@ void setup_GOP()
     horizontalResolution = gop->Mode->Info->HorizontalResolution;
     verticalResolution = gop->Mode->Info->VerticalResolution;
     pixelsPerScanLine = gop->Mode->Info->PixelsPerScanLine;
+    cursor = frameBufferStart;
 
     clearscreen(0x000000ff);
-    vprintf("!\"#$%&'()*+,-./0123456789:;<=>?@AB", 0x00ffffff, frameBufferStart);
+    vprintf(" !\"#$%%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz\r\n", 0x00ffffff);
+    vprintf("UEFI Space?.\r\n", 0x00ffffff);
 }
 
-void vprintf(const unsigned char* str, unsigned int color, unsigned int *start)
+void vprintf(const unsigned char* str, unsigned int color)
 {
     for(int i = 0; str[i] != '\0'; i++)
     {
-        vprintchar(str[i], color, start + i * 14);
+        vprintchar(str[i], color);
     }
 }
 
@@ -110,9 +113,22 @@ struct d_character {
     unsigned char value[8];
 };
 
-void vprintchar(unsigned char character, unsigned int color, unsigned int *start)
+void vprintchar(unsigned char character, unsigned int color)
 {
+    if(character == '\r')
+    {
+        cursor = ((cursor - frameBufferStart) / horizontalResolution) * horizontalResolution + frameBufferStart;
+        return;
+    }
+    else if(character == '\n')
+    {
+        cursor = cursor + 16 * horizontalResolution;
+        return;
+    }
+
     unsigned short *a = ASCII_CHARSET[character];
+    unsigned int *spot;
+    spot = cursor;
 
     for(int i = 0; i < 16; i++)
     {
@@ -120,11 +136,13 @@ void vprintchar(unsigned char character, unsigned int color, unsigned int *start
         {
             if((0x1 << (13 - j)) & a[i])
             {
-                start[j] = color;
+                spot[j] = color;
             }
         }
-        start += pixelsPerScanLine;
+        spot += pixelsPerScanLine;
     }
+
+    cursor += 14;
 }
 
 void clearscreen(unsigned int color)
