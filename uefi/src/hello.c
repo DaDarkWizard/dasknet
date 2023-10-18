@@ -24,6 +24,7 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
         return Status;
 
     setup_GOP();
+    vprintf("Finished setting up GOP. Now let's load some images.\r\n", 0xffffff);
  
     /* Now wait for a keystroke before continuing, otherwise your
        message will flash off the screen before you see it.
