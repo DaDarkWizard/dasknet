@@ -98,7 +98,7 @@ void setup_GOP()
 
     clearscreen(0x000000ff);
     vprintf(" !\"#$%%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz\r\n", 0x00ffffff);
-    vprintf("UEFI Space?.\r\n", 0x00ffffff);
+    vprintf("UEFI Space?\r\n", 0x00ffffff);
 }
 
 void vprintf(const unsigned char* str, unsigned int color)
@@ -156,7 +156,7 @@ void vprintchar(unsigned char character, unsigned int color)
             frameBufferStart[i] = frameBufferStart[i + horizontalResolution];
         }
         cursor -= horizontalResolution * 16;
-        cursor = (cursor / horizontalResolution) * horizontalResolution;
+        cursor = ((unsigned long long)cursor / horizontalResolution) * horizontalResolution;
         for(int i = 0; i < horizontalResolution; i++)
         {
             for(int j = 0; j < 16; j++)
