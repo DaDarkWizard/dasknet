@@ -179,7 +179,7 @@ void vprintchar(unsigned char character, unsigned int color)
 	{
 		frameBufferStart[frameBufferLength / 4 - 16 * horizontalResolution + i] = 0x00;
 	}
-	cursor = (unsigned int*)((((unsigned long long)cursor - (unsigned long long)frameBufferStart * 16) / (unsigned long long)horizontalResolution) * (unsigned long long)horizontalResolution);
+	cursor -= horizontalResolution * 16;
 
     }
 }
