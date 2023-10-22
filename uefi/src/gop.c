@@ -154,7 +154,7 @@ void vprintchar(unsigned char character, unsigned int color)
 	cursor = ((cursor - frameBufferStart) / horizontalResolution) * horizontalResolution + frameBufferStart;
     }
 
-    if(cursor >= frameBufferStart + frameBufferLength)
+    if((unsigned long long)cursor >= (unsigned long long)frameBufferStart + (unsigned long long)frameBufferLength)
     {
         for(int i = 0; i < frameBufferLength / 4 - horizontalResolution; i++)
         {
