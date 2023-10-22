@@ -151,14 +151,14 @@ void vprintchar(unsigned char character, unsigned int color)
 	cursor = ((cursor - frameBufferStart) / horizontalResolution) * horizontalResolution + frameBufferStart;
     }
 
-    /*if(cursor >= frameBufferStart + frameBufferLength)
+    if(cursor >= frameBufferStart + frameBufferLength)
     {
         for(int i = 0; i < frameBufferLength / 4 - horizontalResolution; i++)
         {
             frameBufferStart[i] = frameBufferStart[i + horizontalResolution];
         }
         cursor -= horizontalResolution * 16;
-        cursor = ((unsigned long long)cursor / horizontalResolution) * horizontalResolution;
+        cursor = (unsigned int*)((((unsigned long long)cursor - (unsigned long long)frameBufferStart) / horizontalResolution) * horizontalResolution);
         for(int i = 0; i < horizontalResolution; i++)
         {
             for(int j = 0; j < 16; j++)
@@ -166,7 +166,7 @@ void vprintchar(unsigned char character, unsigned int color)
                 cursor[j * horizontalResolution + i] = 0x000000ff;
             }
         }
-    }*/
+    }
 }
 
 void clearscreen(unsigned int color)
