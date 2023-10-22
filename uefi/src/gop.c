@@ -169,8 +169,13 @@ void vprintchar(unsigned char character, unsigned int color)
                 cursor[j * horizontalResolution + i] = 0x000000ff;
             }
         }*/
-	clearscreen(0xff);
-	cursor = frameBufferStart;
+	//clearscreen(0xff);
+	//cursor = frameBufferStart;
+        for(int i = 0; i < frameBufferLength / 4 - horizontalResolution * 16; i++)
+        {
+            frameBufferStart[i] = frameBufferStart[i + horizontalResolution * 16];
+        }
+
     }
 }
 
