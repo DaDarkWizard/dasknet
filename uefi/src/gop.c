@@ -99,6 +99,7 @@ void setup_GOP()
     clearscreen(0x000000ff);
     vprintf(" !\"#$%%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz\r\n", 0x00ffffff);
     vprintf("UEFI Space?\r\n", 0x00ffffff);
+    vprintf("Now it's time to get some long text into here to see if the screen overflows. It should, but it'll take quite a bit of text to do so since the screen width is set to be the maximum size that the screen width can be.");
 }
 
 void vprintf(const unsigned char* str, unsigned int color)
