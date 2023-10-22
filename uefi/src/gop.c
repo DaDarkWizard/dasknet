@@ -144,9 +144,10 @@ void vprintchar(unsigned char character, unsigned int color)
 
     cursor += 14;
 
-    if(((unsigned int)(cursor + 14)) % horizontalResolution < ((unsigned int)cursor) % horizontalResolution)
+    if(((unsigned int)((cursor - frameBufferStart) + 14)) % horizontalResolution < ((unsigned long long)cursor - (unsigned long long)frameBufferStart) % horizontalResolution)
     {
         cursor += horizontalResolution * 16 + 14;
+	cursor = ((cursor - frameBufferStart) / horizontalResolution) * horizontalResolution + frameBufferStart;
     }
 
     if(cursor >= frameBufferStart + frameBufferLength)
